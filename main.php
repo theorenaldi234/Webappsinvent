@@ -1,0 +1,583 @@
+
+<?php include 'template/header.php';?>
+<?php 
+$kodeCart = "";
+// $bikin_nota = mysqli_query($conn, "SELECT max(no_nota) as kodeTerbesar11 FROM laporanlog");
+// $datanya = mysqli_fetch_array($bikin_nota);
+// $kodenota= $datanya['kodeTerbesar11'];
+// $urutan = (int) substr($kodenota, 13, 3);
+// $urutan++;
+$tgl = date("YmdHis");//date-time;//date("jnyGi");
+$huruf = "TNR";
+$kodeCart = $huruf . $tgl  //sprintf("%03s", $urutan);
+?>
+<div class="row">
+
+        <div class="col-6 col-sm-6 col-md-6 col-lg-3 mb-3 m-pr-0">
+            <div class="card-body bg-white py-2 px-1 border-laporan">
+                 <a  href="laporan.php">
+                <div class="row mx-auto align-items-center">
+                <div class="col-auto m-pr-1">
+                    <div class="bg-icon">
+                        <i class="fa fa-shopping-cart" ></i>
+                    </div>
+                </div>
+                <div class="col-auto pl-0 pt-2">
+                    <div class="text-muted" style="font-size:11px;">
+                        Toner Terpasang
+                    </div>
+                    <h4 class="1"><?php $itungpeterjual = mysqli_query($conn,"SELECT SUM(quantity) as jumlahterjual FROM tb_nota");
+                    $cekrow = mysqli_num_rows($itungpeterjual);
+                    $itungpeterjual1 = mysqli_fetch_assoc($itungpeterjual);
+                    $itungpeterjual2 = $itungpeterjual1['jumlahterjual'];
+                    if($cekrow > 0){
+                        echo $itungpeterjual2;
+                        } ?></h4>
+                </div>
+                </div>
+            </a>
+            </div>
+        </div>
+
+        <div class="col-6 col-sm-6 col-md-6 col-lg-3 mb-3 m-pr-0">
+            <div class="card-body bg-white py-2 px-1 border-laporan">
+                <div class="row mx-auto align-items-center">
+                <div class="col-auto m-pr-1">
+                    <div class="bg-icon">
+                        <i class="fa fa-shopping-cart" ></i>
+                    </div>
+                </div>
+                <div class="col-auto pl-0 pt-2">
+                    <div class="text-muted" style="font-size:11px;">
+                        Toner Terpasang Bulan ini
+                    </div>
+                    <h4 class="1">
+                    <?php 
+                    $bln = date("m-y");
+                    $itungpeterjual = mysqli_query($conn,"SELECT SUM(quantity) as jumlahterjual FROM tb_nota WHERE MONTH(tgl_input) = '".$bln."'" );
+                    $cekrow = mysqli_num_rows($itungpeterjual);
+                    $itungpeterjual1 = mysqli_fetch_assoc($itungpeterjual);
+                    $itungpeterjual2 = $itungpeterjual1['jumlahterjual'];
+                    if($cekrow > 0){
+                        echo $itungpeterjual2;
+                        } ?></h4>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-sm-6 col-md-6 col-lg-3 mb-3 pr-0">
+            <div class="card-body bg-white py-2 px-1 border-laporan">
+                <div class="row mx-auto align-items-center">
+                <div class="col-auto m-pr-1">
+                    <div class="bg-icon">
+                        <i class="fa fa-dollar-sign"></i>
+                    </div>
+                </div>
+                <div class="col-auto pl-0 pt-2">
+                    <div class="text-muted" style="font-size:11px;">
+                        Total Bulan ini
+                    </div>
+                    <h4 class="1">Rp.<?php 
+                    $bln = date("m-y");
+                    $itungtotal = mysqli_query($conn,"SELECT SUM(totalbeli) as jumlahtotal FROM laporan WHERE MONTH(tgl_sub) = '".$bln."'");
+                    $cekrow3 = mysqli_num_rows($itungtotal);
+                    $itungtotal1 = mysqli_fetch_assoc($itungtotal);
+                    $itungtotal2 = $itungtotal1['jumlahtotal'];
+                    if($cekrow3 > 0){
+                        echo ribuan($itungtotal2);
+                        } ?></h4>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-sm-6 col-md-6 col-lg-3 mb-3">
+            <div class="card-body bg-white py-2 px-1 border-laporan">
+                <div class="row mx-auto align-items-center">
+                <div class="col-auto m-pr-1">
+                    <div class="bg-icon">
+                        <i class="fa fa-file-invoice-dollar"></i>
+                    </div>
+                </div>
+                <div class="col-auto pl-0 pt-2">
+                    <div class="text-muted" style="font-size:11px;">
+                        Total
+                    </div>
+                    <h4 class="1">Rp.<?php 
+                    $bln = date("m");
+                    $itungtotal = mysqli_query($conn,"SELECT SUM(totalbeli) as jumlahtotal FROM laporan ");
+                    $cekrow3 = mysqli_num_rows($itungtotal);
+                    $itungtotal1 = mysqli_fetch_assoc($itungtotal);
+                    $itungtotal2 = $itungtotal1['jumlahtotal'];
+                    if($cekrow3 > 0){
+                        echo ribuan($itungtotal2);
+                        } ?></h4>
+                </div>
+                </div>
+            </div>
+        </div>
+</div>
+<div class="row mt-3">
+
+<div class="col-lg-3 mb-3">
+    <div class="card small mb-3">
+        <div class="card-header p-2">
+            <div class="card-tittle"><i class="far fa-file mr-1"></i> Informasi Nota</div>
+        </div>
+        <div class="card-body p-2">
+            <div class="row">
+                <div class="col-4 mb-2 text-right pt-1 pr-1">No. Nota : </div>
+                <div class="col-8 mb-2 pl-0">
+                    <input type="text" class="form-control form-control-sm bg-white" value="<?php echo $kodeCart ?>" readonly>
+                </div>
+                <div class="col-4 mb-2 text-right pt-1 pr-1">Tanggal : </div>
+                <div class="col-8 mb-2 pl-0">
+                    <input type="text" class="form-control form-control-sm bg-white"  id="date-time" readonly>
+                </div>
+                <div class="col-4 text-right pt-1 pr-1">IT : </div>
+                <div class="col-8 pl-0">
+                    <input type="text" class="form-control form-control-sm bg-white" value="<?php echo $_SESSION['username'] ?>" readonly>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card small mb-3">
+        <div class="card-header p-2">
+            <div class="card-tittle"><i class="far fa-user mr-1"></i> Informasi Printer 
+                
+            </div>
+        </div>
+        <div class="card-body p-2">
+            <div style="display:none;width: 100%;" id="Tambah1">
+            <?php
+            if(isset($_POST['lantai_printer']))
+            {
+                $lokasi_printer = htmlspecialchars($_POST['lokasi_printer']);
+                $tipe_printer = htmlspecialchars($_POST['tipe_printer']);
+                $lantai_printer = htmlspecialchars($_POST['lantai_printer']);
+
+                $tambahPel = mysqli_query($conn,"INSERT INTO printer(lokasi_printer,tipe_printer,lantai_printer)
+                 values ('$lokasi_printer','$tipe_printer','$lantai_printer')");
+                if ($tambahPel){
+                    echo '<script>alert("Tambah Data Pelanggan Berhasil");window.location="main.php"</script>';
+                } else {
+                    echo '<script>alert("Maaf! data yang anda masukan salah.");history.go(-1);</script>';
+                }
+                
+            };
+            ?>
+                <form method="post">
+                    <div class="row">
+                        <div class="col-4 mb-2 text-right pt-1 pr-1 text-primary">Lokasi Printer : </div>
+                        <div class="col-8 mb-2 pl-0">
+                            <input type="text" class="form-control form-control-sm" name="lokasi_printer" required>
+                        </div>
+                        <div class="col-4 mb-2 text-right pt-1 pr-1 text-primary">Telepon : </div>
+                        <div class="col-8 mb-2 pl-0">
+                            <input type="number" class="form-control form-control-sm" name="tipe_printer" required>
+                        </div>
+                        <div class="col-4 text-right pt-1 pr-1 text-primary">Lantai : </div>
+                        <div class="col-8 pl-0">
+                            <input type="text" class="form-control form-control-sm" name="lantai_printer" onchange="form.submit()" required>
+                        </div>
+                    </div>
+                </form>
+            </div><!-- end tambah1 -->
+            <div id="Ada1">
+            <div class="row">
+                <div class="col-4 mb-2 text-right pt-1 pr-1">Lokasi Printer : </div>
+                <div class="col-8 mb-2 pl-0">
+                <?php 
+                    $plgn=mysqli_query($conn, "SELECT * FROM printer order by id_printer ASC");
+                    $jsArrayp = "var tipe_printer = new Array();";
+                    $jsArrayp1 = "var lantai_printer = new Array();";
+                    $jsArrayp2 = "var idprinter = new Array();";
+                    ?>
+                    <input type="text" class="form-control form-control-sm bg-white"  list="datalist2"
+                 onchange="changeValuePelanggan(this.value)" required>
+                 <datalist id="datalist2">
+                <?php  
+                if(mysqli_num_rows($plgn)) {
+                 while($row_p= mysqli_fetch_array($plgn)) {?>
+                        <option value="<?php echo $row_p["lokasi_printer"]?>"> <?php echo $row_p["lokasi_printer"]?> 
+                        <?php 
+                                $jsArrayp .= "tipe_printer['" . $row_p['lokasi_printer'] . "'] = {tipe_printer:'" . addslashes($row_p['tipe_printer']) . "'};";
+                                $jsArrayp1 .= "lantai_printer['" . $row_p['lokasi_printer'] . "'] = {lantai_printer:'" . addslashes($row_p['lantai_printer']) . "'};"; 
+                                $jsArrayp2 .= "id_printer['" . $row_p['lokasi_printer'] . "'] = {id_printer:'" . addslashes($row_p['id_printer']) . "'};"; } ?>
+                <?php } ?>
+                    </datalist>
+                </div>
+                <div class="col-4 mb-2 text-right pt-1 pr-1">Tipe Printer : </div>
+                <div class="col-8 mb-2 pl-0">
+                    <input type="text" class="form-control form-control-sm bg-white" id="tipe_printer" readonly>
+                </div>
+                <div class="col-4 text-right pt-1 pr-1">Lantai Printer : </div>
+                <div class="col-8 pl-0">
+                    <input type="text" class="form-control form-control-sm bg-white" id="lantai_printer" readonly>
+                </div>
+            </div>
+            </div><!-- end ada1 -->
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-9" id="print">
+    <form id="myCartNew" method="post">
+    <div class="row print-none">
+        <div class="col-12 col-lg-3 m-pr-0">
+        <?php 
+            $barang=mysqli_query($conn, "SELECT * FROM produk ORDER BY idproduk ASC");
+            $jsArray = "var harga_jual = new Array();";
+            $jsArray1 = "var nama_produk = new Array();";
+            $jsArray3 = "var idproduk = new Array();";
+            $jsArray4 = "var stock = new Array();";
+            $jsArray5 = "var kode_produk = new Array();";
+            ?>
+            <label class="mb-1">Tipe Toner</label>
+            <div class="input-group">
+                <input type="text" class="form-control form-control-sm border-right-0" list="datalist1"
+                 onchange="changeValue(this.value)"  aria-describedby="basic-addon2" required>
+                <datalist id="datalist1">
+                <?php  
+                if(mysqli_num_rows($barang)) {
+                 while($row_brg= mysqli_fetch_array($barang)) {?>
+                        <option value="<?php echo $row_brg["kode_produk"]?>"> <?php echo $row_brg["kode_produk"]?> 
+                        <?php $jsArray .= "harga_jual['" . $row_brg['kode_produk'] . "'] = {harga_jual:'" . addslashes($row_brg['harga_jual']) . "'};";
+                                $jsArray1 .= "nama_produk['" . $row_brg['kode_produk'] . "'] = {nama_produk:'" . addslashes($row_brg['nama_produk']) . "'};";
+                                $jsArray3 .= "idproduk['" . $row_brg['kode_produk'] . "'] = {idproduk:'" . addslashes($row_brg['idproduk']) . "'};";
+                                $jsArray4 .= "stock['" . $row_brg['kode_produk'] . "'] = {stock:'" . addslashes($row_brg['stock']) . "'};"; } ?>
+                <?php } ?>
+                    </datalist>
+                    <div class="input-group-append">
+                        <span class="input-group-text bg-white border-left-0 pr-1" id="basic-addon2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-upc-scan" viewBox="0 0 16 16">
+                            <path d="M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1h-3zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5zM.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5zM3 4.5a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7zm2 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7zm2 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7zm2 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-7zm3 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7z"/>
+                            </svg></span>
+                    </div>
+                </div>
+        </div>
+        <div class="col-6 col-lg-2 pr-0">
+            <label class="mb-1">Warna Toner</label>
+            <input type="hidden" class="form-control form-control-sm bg-white" name="idproduk" id="idproduk" readonly>
+            <input type="text" class="form-control form-control-sm bg-white" id="nama_produk" readonly>
+        </div>
+        <div class="col-6 col-lg-2 m-pr-0">
+            <label class="mb-1">Harga</label>
+            <input type="text" class="form-control form-control-sm bg-white" id="harga_jual"
+             onchange="total()">
+        </div>
+        <div class="col-6 col-lg-1 pr-0">
+            <label class="mb-1">Stock</label>
+            <input type="text" class="form-control form-control-sm bg-white" id="stock" readonly>
+        </div>
+        <div class="col-6 col-lg-1 m-pr-0">
+            <label class="mb-1">Qty</label>
+            <input type="number" class="form-control form-control-sm" id="quantity" onchange="total()"
+            name="quantity" placeholder="0" required>
+        </div>
+        <div class="col-lg-3">
+            <label class="mb-1">Subtotal</label>
+            <div class="input-group">
+                <input type="number" class="form-control form-control-sm bg-white" id="subtotal" name="tambahcuy" onchange="total()" readonly>
+            <div class="input-group-append">
+                <button class="btn btn-danger btn-sm border-0" type="reset">
+                    <i class="fa fa-trash-restore-alt"></i> Reset</button>
+            </div>
+            </div>
+        </div>
+    </div><!-- end row -->
+</form>
+<?php
+if(isset($_POST['tambahcuy'])){
+    $idproduk  = $_POST['idproduk'];
+    $quantity  = $_POST['quantity'];
+    $cekBarang = mysqli_query($conn, "SELECT * FROM produk WHERE idproduk='$idproduk'");
+    $stocknya  = mysqli_fetch_array($cekBarang);
+    $stock     = $stocknya['stock'];
+    $sisa      = $stock-$quantity;
+    
+    if ($stock < $quantity) {
+    echo '<script>alert("Oops! Jumlah pengeluaran lebih besar dari stok ...");window.location="main.php"</script>';
+    }   
+    else{
+     $insert = mysqli_query($conn, "INSERT INTO keranjang (idproduk,quantity) VALUES ('$idproduk','$quantity')");
+      if($insert){
+        $upstok = mysqli_query($conn, "UPDATE produk SET stock='$sisa' WHERE idproduk='$idproduk'");
+        echo '<script>window.location="main.php"</script>';
+     }
+    else { echo '<script>alert("ERROR.");history.go(-1);</script>';}
+    }
+    }
+?>
+
+<div class="d-none pt-5 px-4 print-show">
+    <div class="row">
+        <div class="col-12 text-center mb-2">
+            <h1 style="font-size:60px;font-weight:700;"><?php echo $toko ?></h1>
+            <h4 class="mb-0"><?php echo $alamat ?></h4>
+            <h4 class="mb-2">Tel : <?php echo $telp  ?></h4>
+        </div>
+        <div class="col-7">
+            <h3 class="mb-0" style="text-transform: uppercase;">INVOICE : <?php echo $kodeCart ?></h3>
+            <h3 class="mb-0" style="text-transform: uppercase;">IT : <?php echo $_SESSION['username'] ?></h3>
+        </div>
+        <div class="col-5">
+            <div class="row">
+                <div class="col-6 text-right mb-1"><h3 class="mb-0">TANGGAL :</h3></div>
+                <div class="col-6 pl-1 mb-1"><h3 class="mb-0"><?php echo date('d-m-Y') ?></h3></div>
+                <div class="col-6 text-right"><h3 class="mb-0">PUKUL :</h3></div>
+                <div class="col-6 pl-1"><h3 class="mb-0" id="jam-print"></h3></div>
+            </div>
+        </div>
+        <div class="col-12 bg-secondary border my-3"></div>
+        <div class="col-12 mb-3">
+            <div class="row">
+                <div class="col-1 text-center"><h3 style="font-weight:700;">QTY</h3></div>
+                <div class="col"><h3 style="font-weight:700;">PRODUK</h3></div>
+                <div class="col text-center"><h3 style="font-weight:700;">HARGA</h3></div>
+                <div class="col text-right"><h3 style="font-weight:700;">SUBTOTAL</h3></div>
+            </div>
+        </div>
+        <?php
+            $subtotalcart2= 0;
+            $no=1;
+            $data_produk1=mysqli_query($conn,"SELECT * FROM keranjang c, produk p
+            WHERE p.idproduk=c.idproduk ORDER BY idcart ASC");
+            while ($c = $data_produk1->fetch_assoc()) {
+                $subtotalcart3 = $c['harga_jual'] * $c['quantity'];
+                $subtotalcart2 += $subtotalcart3;
+                ?>
+        <div class="col-12 mb-2">
+            <div class="row">
+                <div class="col-1 text-center"><h3><?php echo $c['quantity'] ?></h3></div>
+                <div class="col"><h3><?php echo $c['nama_produk'] ?></h3></div>
+                <div class="col text-center"><h3>Rp.<?php echo ribuan($c['harga_jual']) ?></h3></div>
+                <div class="col text-right"><h3>Rp.<?php echo ribuan($subtotalcart3) ?></h3></div>
+            </div>
+        </div>
+        <?php }?>
+        <div class="col-12 bg-secondary border my-3"></div>
+        <div class="col-12">
+            <h3>Total Belanja <span class="float-right">Rp.<?php echo ribuan($subtotalcart2) ?></span></h3>
+            <h3>Tunai <div class="float-right">Rp.<span id="bayarnya1"></span></div></h3>
+            <h3>Kembali <div class="float-right">Rp.<span id="total2"></span></div></h3>
+        </div>
+        <div class="col-12 bg-secondary border my-3"></div>
+        <div class="col-12">
+            <h4>Catatan : <span id="new_catatan"></span></h4>
+        </div>
+        <div class="col-12 bg-secondary border my-3"></div>
+        <div class="col-12 text-center">
+            <h3>* Terima Kasih Telah Berbelanja Di Toko Kami *</h3>
+            <p class="h4 text-muted">Koperasi NET.</p>
+        </div>
+    </div><!-- end row -->
+</div><!-- end box print -->
+
+    <table class="table table-striped table-sm table-bordered dt-responsive nowrap print-none" id="cart" width="100%">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Tipe Toner</th>
+                            <th>Warna Toner</th>
+                            <th>Harga</th>
+                            <th>Qty</th>
+                            <th>Subtotal</th>
+                            <th>Opsi</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                                $subtotalcart1= 0;
+                                $no=1;
+                                $data_produk=mysqli_query($conn,"SELECT * FROM keranjang c, produk p
+                                WHERE p.idproduk=c.idproduk ORDER BY idcart ASC");
+                                while ($d = $data_produk->fetch_assoc()) {
+                                    $idcart = $d['idcart'];
+                                    $subtotalcart = $d['harga_jual'] * $d['quantity'];
+                                    $subtotalcart1 += $subtotalcart;
+                                    ?>
+                                    
+                                    <tr>
+                                        <td><?php echo $no++ ?></td>
+                                        <td><?php echo $d['kode_produk'] ?></td>
+                                        <td><?php echo $d['nama_produk'] ?></td>
+                                        <td>Rp.<?php echo ribuan($d['harga_jual']) ?></td>
+                                        <td><?php echo $d['quantity'] ?></td>
+                                        <td>Rp.<?php echo ribuan($subtotalcart) ?></td>
+                                        <td>
+                                            <form method="post" class="d-inline-block">
+                                            <input type="hidden" name="idpr" value="<?php echo $d['idproduk'] ?>">
+                                            <input type="hidden" name="idcc" value="<?php echo $d['idcart'] ?>">
+                                                <input type="hidden" name="jml" value="<?php echo $d['quantity'] ?>">
+                                                <button type="submit" name="upone" class="btn btn-danger btn-xs"><i class="fa fa-trash fa-xs mr-1"></i>Hapus</a></button>
+                                            </form>
+                                        </td>
+                                    </tr>       
+                        <?php 
+                        if(isset($_POST['upone'])){
+                            $idcartt = $_POST['idcc'];
+                            $idproduk = $_POST['idpr'];
+                            $jml = $_POST['jml'];
+                        
+                            $cekBarang1 = mysqli_query($conn, "SELECT * FROM produk WHERE idproduk='$idproduk'");
+                            $cekBarang2 = mysqli_query($conn, "SELECT * FROM keranjang WHERE idcart='$idcartt'");
+                            $stocknya1  = mysqli_fetch_array($cekBarang1);
+                            $stocknya2  = mysqli_fetch_array($cekBarang2);
+                            $stockk     = $stocknya1['stock'];
+                            $jml1     = $stocknya2['quantity'];
+                            //menghitung sisa stok
+                            $sisa1    =$stockk+$jml1;
+                            
+                            $insert1 = mysqli_query($conn, "UPDATE produk SET stock='$sisa1' WHERE idproduk='$idproduk'");
+                                    if($insert1){
+                                        //update stok
+                                        $hapus_data = mysqli_query($conn, "DELETE FROM keranjang WHERE idcart ='$idcartt'");
+                                        echo '<script>alert("Data Berhasil Di Hapus");window.location="main.php"</script>';
+                                    } else {
+                                        echo '<script>alert("ERROR.");history.go(-1);</script>';
+                                    
+                            }
+                            }
+                    }?>
+                    </tbody>
+                </table>
+                <div class="bg-total p-2 text-right print-none">
+                    Rp.<?php echo ribuan($subtotalcart1) ?>
+                </div>
+                <form method="POST" class="mt-2 print-none">
+                    <div class="row">
+                        <div class="col-lg-7 mb-2">
+                            <textarea name="catatan" class="form-control form-control-sm" id="catatan_baru"
+                            placeholder="Catatan Transaksi"cols="5" rows="3" onchange="new_catatan()"></textarea>
+                        </div>
+                        <div class="col-lg-5 mb-2 print-none">
+                            <div class="row">
+                                <div class="col-12 text-right pr-0 mt-2">
+                                    <button type="button" class="btn btn-light btn-sm px-3"  onclick="document.title='Invoice#<?php echo $kodeCart ?>';window.print()"> 
+                                    <i class="fa fa-print mr-1"></i> Cetak
+                                </button>
+                                <button type="reset" class="btn btn-danger btn-sm px-3">
+                                    <i class="fa fa-trash-restore-alt mr-1"></i> Reset
+                                </button>
+                                <button type="submit" name="save" class="btn btn-primary btn-sm px-3">
+                                    <i class="far fa-file mr-1"></i> Simpan
+                                </button>
+                                <div class="col-7 mb-2 pl-0">
+                                    <input type="hidden" name="no_nota" value="<?php echo $kodeCart ?>">
+                                    <input type="hidden" name="nama_kasir" value="<?php echo $_SESSION['username'] ?>">
+                                    <input type="hidden" name="id_printer" id="id_printer" required>
+                                    <input type="hidden" name="totalbeli" value="<?php echo $subtotalcart1 ?>" id="hargatotal">
+                                    <input type="hidden" class="form-control form-control-sm bg-white" placeholder="0"
+                                    name="pembayaran" id="bayarnya" onchange="totalnya()" required>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div><!-- end row -->
+                </form>
+                </div><!-- end print -->
+</div><!-- end col-lg-9 -->
+
+</div><!-- end row -->
+<?php 
+if(isset($_POST['save'])){
+    $nonota = $_POST['no_nota'];
+    $idpell = $_POST['id_printer'];
+    $pembayaran= $_POST['pembayaran'];
+    $kembalian = $_POST['kembalian'];
+    $totalbeli = $_POST['totalbeli'];
+    $catatan = htmlspecialchars($_POST['catatan']);
+    $namakasir = $_POST['nama_kasir'];
+
+    $updatetkeranjang = mysqli_query($conn,"UPDATE keranjang SET
+      no_nota='$nonota'") 
+     or die (mysqli_connect_error()); 
+
+     $ambildatacart = mysqli_query($conn,"INSERT INTO tb_nota
+     (no_nota,idproduk,quantity)
+    SELECT no_nota,idproduk,quantity FROM keranjang")
+     or die (mysqli_connect_error()); 
+
+     $insertlaporan = mysqli_query($conn, "INSERT INTO laporan (no_nota,id_printer,catatan,pembayaran,kembalian,totalbeli,nama_kasir)
+      VALUES ('$nonota','$idpell','$catatan','$pembayaran','$kembalian','$totalbeli','$namakasir')");
+
+    $hapusdatacart = mysqli_query($conn,"DELETE FROM keranjang");
+    
+    if($updatetkeranjang&&$ambildatacart&&$insertlaporan ){
+        echo '<script>window.location="main.php"</script>';
+    } else {
+        echo '<script>window.location="main.php"</script>';
+    }
+
+}
+?>
+<script type="text/javascript">
+      <?php echo $jsArray,$jsArray1,$jsArray3,$jsArray4,$jsArrayp,$jsArrayp1,$jsArrayp2; ?>
+    function changeValue(kode_produk) {
+      document.getElementById("nama_produk").value = nama_produk[kode_produk].nama_produk;
+      document.getElementById("harga_jual").value = harga_jual[kode_produk].harga_jual;
+      document.getElementById("idproduk").value = idproduk[kode_produk].idproduk;
+      document.getElementById("stock").value = stock[kode_produk].stock;
+    };
+
+function total() {
+   var harga =  parseInt(document.getElementById('harga_jual').value);
+   var jumlah_beli =  parseInt(document.getElementById('quantity').value);
+   var jumlah_harga = harga * jumlah_beli;
+    document.getElementById('subtotal').value = jumlah_harga;
+    document.getElementById("myCartNew").submit();
+  }
+    
+  function totalnya() {
+   var harga =  parseInt(document.getElementById('hargatotal').value);
+   var pembayaran =  parseInt(document.getElementById('bayarnya').value);
+   var kembali = pembayaran - harga;
+    document.getElementById('total1').value = kembali;
+    document.getElementById('total2').innerHTML = kembali;
+    document.getElementById('bayarnya1').innerHTML = pembayaran;
+  }
+
+  function changeValuePelanggan(lokasi_printer) {
+      document.getElementById("tipe_printer").value = tipe_printer[lokasi_printer].tipe_printer;
+      document.getElementById("lantai_printer").value = lantai_printer[lokasi_printer].lantai_printer;
+      document.getElementById("id_printer").value = id_printer[lokasi_printer].id_printer;
+    };
+
+    function new_catatan() {
+    var c = document.getElementById("catatan_baru").value;
+    document.getElementById("new_catatan").innerHTML = c;
+    }
+  </script>
+
+<script type="text/javascript">
+timer();
+function timer(){
+var today = new Date();
+var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+var dateTime = date+' '+time;
+document.getElementById('date-time').value = dateTime;
+document.getElementById('jam-print').innerHTML = time;
+setTimeout(timer,1000);
+        }
+  </script>
+  <script>
+function TambahBaru() {
+  var x = document.getElementById("Ada1");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+  var y = document.getElementById("Tambah1");
+  if (y.style.display === "block") {
+    y.style.display = "none";
+  } else {
+    y.style.display = "block";
+  }
+}
+</script>
+<?php include 'template/footer.php';?>
